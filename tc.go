@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	del(2)
-	config(2)
+	del(50)
+	config(50)
 	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
-	show(2)
+	show(50)
 }
 
 func config(num int){

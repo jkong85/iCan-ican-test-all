@@ -18,7 +18,6 @@ func config(num int){
 	log.Println("Start to config the TC policy on All Nodes!")
 	for i := 0; i<num; i++{
 		node_name := "ican-" + strconv.Itoa(i)
-		log.Println("========================")
 		log.Println("Config the node: " + node_name)
 		// for each node, we config the VM's interface, Br interface and all the container internace and Veth		
 		node_cmd_prefix := "ssh " + node_name + " sudo "
@@ -32,34 +31,34 @@ func config(num int){
 		cmd := node_cmd_prefix + " docker ps -q"
 		ids := exe_cmd_full(cmd)
 		if ids == ""{
-			log.Println("No pod on node " + node_name)
+			//log.Println("No pod on node " + node_name)
 			continue
 		}
 		for _, container_id := range strings.Split(ids, "\n") {
-			log.Println("container_id is: " + container_id)
+			//log.Println("container_id is: " + container_id)
 			if container_id == "" {
-				log.Println("container_id is nil")
+				//log.Println("container_id is nil")
 				continue
 			}
 			//get container pid
 			cmd_docker := node_cmd_prefix + " docker inspect -f {{.State.Pid}} " + container_id
 			container_pid := strings.Trim(exe_cmd_full(cmd_docker), "\n")
-			log.Println("container pid is: " + container_pid)
+			//log.Println("container pid is: " + container_pid)
 			//for each container, set its interface's TC policy
 			// tc qdisc add dev eth0 root tbf rate 100mbit latency 50ms burst 100k
 			cmd_docker = node_cmd_prefix + " nsenter -t " + container_pid + " -n " +  " tc qdisc add dev eth0 root tbf rate 100mbit latency 50ms burst 100k"
-			log.Println(exe_cmd_full(cmd_docker))
+			exe_cmd_full(cmd_docker)
 		}
 		// then we find out the veth and config the tc policy
 		cmd = node_cmd_prefix + " ifconfig | grep veth "
 
 		for _, line := range strings.Split(exe_cmd_full(cmd), "\n") {
 			if line == ""{
-				log.Println("veth is nil")		
+				//log.Println("veth is nil")		
 				continue
 			}
 			veth_name := strings.Split(line, " ")[0]
-			log.Println("veth name is:" + veth_name)
+			//log.Println("veth name is:" + veth_name)
 			cmd_veth := node_cmd_prefix + " tc qdisc add dev " + veth_name + " root tbf rate 100mbit latency 50ms burst 100k"
 
 			_ = exe_cmd_full(cmd_veth)
@@ -119,7 +118,7 @@ func showEth(node_cmd_prefix string, dev string){
 func show(num int){
 	for i := 0; i<num; i++{
 		node_name := "ican-" + strconv.Itoa(i)
-		log.Println("========================")
+		//log.Println("========================")
 		log.Println("Show the config of the node: " + node_name)
 		// for each node, we config the VM's interface, Br interface and all the container internace and Veth		
 		node_cmd_prefix := "ssh " + node_name + " sudo "
@@ -130,33 +129,33 @@ func show(num int){
 		cmd := node_cmd_prefix + " docker ps -q"
 		ids := exe_cmd_full(cmd)
 		if ids == ""{
-			log.Println("No pod on node " + node_name)
+			//log.Println("No pod on node " + node_name)
 			continue
 		}
 		for _, container_id := range strings.Split(ids, "\n") {
-			log.Println("container_id is: " + container_id)
+			//log.Println("container_id is: " + container_id)
 			if container_id == "" {
-				log.Println("container_id is nil")
+				//log.Println("container_id is nil")
 				continue
 			}
 			//get container pid
 			cmd_docker := node_cmd_prefix + " docker inspect -f {{.State.Pid}} " + container_id
 			container_pid := strings.Trim(exe_cmd_full(cmd_docker), "\n")
-			log.Println("container pid is: " + container_pid)
+			//log.Println("container pid is: " + container_pid)
 			//for each container, set its interface's TC policy
 			cmd_docker = node_cmd_prefix + " nsenter -t " + container_pid + " -n " +  " tc qdisc show dev eth0 "
-			log.Println(exe_cmd_full(cmd_docker))
+			exe_cmd_full(cmd_docker)
 		}
 		// then we find out the veth and config the tc policy
 		cmd = node_cmd_prefix + " ifconfig | grep veth "
 
 		for _, line := range strings.Split(exe_cmd_full(cmd), "\n") {
 			if line == ""{
-				log.Println("veth is nil")
+				//log.Println("veth is nil")
 				continue
 			}
 			veth_name := strings.Split(line, " ")[0]
-			log.Println("veth name is:" + veth_name)
+			//log.Println("veth name is:" + veth_name)
 			cmd_veth := node_cmd_prefix + " tc qdisc show dev " + veth_name
 			_ = exe_cmd_full(cmd_veth)
 		}
@@ -183,33 +182,33 @@ func del(num int){
 		cmd = node_cmd_prefix + " docker ps -q"
 		ids := exe_cmd_full(cmd)
 		if ids == ""{
-			log.Println("No pod on node " + node_name)
+			//log.Println("No pod on node " + node_name)
 			continue
 		}
 		for _, container_id := range strings.Split(ids, "\n") {
-			log.Println("container_id is: " + container_id)
+			//log.Println("container_id is: " + container_id)
 			if container_id == "" {
-				log.Println("container_id is nil")
+				//log.Println("container_id is nil")
 				continue
 			}
 			//get container pid
 			cmd_docker := node_cmd_prefix + " docker inspect -f {{.State.Pid}} " + container_id
 			container_pid := strings.Trim(exe_cmd_full(cmd_docker), "\n")
-			log.Println("container pid is: " + container_pid)
+			//log.Println("container pid is: " + container_pid)
 			//for each container, set its interface's TC policy
 			cmd_docker = node_cmd_prefix + " nsenter -t " + container_pid + " -n " +  " tc qdisc del dev eth0 root"
-			log.Println(exe_cmd_full(cmd_docker))
+			exe_cmd_full(cmd_docker)
 		}
 		// then we find out the veth and config the tc policy
 		cmd = node_cmd_prefix + " ifconfig | grep veth "
 
 		for _, line := range strings.Split(exe_cmd_full(cmd), "\n") {
 			if line == ""{
-				log.Println("veth is nil")		
+				//log.Println("veth is nil")		
 				continue
 			}
 			veth_name := strings.Split(line, " ")[0]
-			log.Println("veth name is:" + veth_name)
+			//log.Println("veth name is:" + veth_name)
 			cmd_veth := node_cmd_prefix + " tc qdisc del dev " + veth_name + " root "
 			_ = exe_cmd_full(cmd_veth)
 		}
@@ -220,12 +219,14 @@ func del(num int){
 
 
 func exe_cmd_full(cmd string) string {
-	log.Println("command is : ", cmd)
-	//out, _ := exec.Command("sh", "-c", cmd).Output()
-	out, err := exec.Command("sh", "-c", cmd).Output()
+	//log.Println("command is : ", cmd)
+	out, _ := exec.Command("sh", "-c", cmd).Output()
+	//out, err := exec.Command("sh", "-c", cmd).Output()
+	/*
 	if err != nil {
 		log.Println("Error to exec CMD", cmd)
 	}
+	*/
 	//log.Println("Output of command:", string(out))
 	return string(out)
 }

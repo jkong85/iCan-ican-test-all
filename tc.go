@@ -10,6 +10,7 @@ import (
 func main() {
 	del(2)
 	config(2)
+	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
 	show(2)
 }
 
@@ -59,7 +60,8 @@ func config(num int){
 			}
 			veth_name := strings.Split(line, " ")[0]
 			log.Println("veth name is:" + veth_name)
-			cmd_veth := node_cmd_prefix + " tc qdisc show dev " + veth_name
+			cmd_veth := node_cmd_prefix + " tc qdisc add dev " + veth_name + " root tbf rate 100mbit latency 50ms burst 100k"
+
 			_ = exe_cmd_full(cmd_veth)
 		}
 
@@ -101,15 +103,15 @@ func showEth(node_cmd_prefix string, dev string){
 
 	cmd := node_cmd_prefix + " tc qdisc show dev " + dev
 	out := exe_cmd_full(cmd)
-	log.Println("qdisc show is" + out)
+	log.Println(out)
 
-	cmd = node_cmd_prefix + " tc qdisc show dev " + dev
+	cmd = node_cmd_prefix + " tc class show dev " + dev
 	out = exe_cmd_full(cmd)
-	log.Println("qdisc show is" + out)
+	log.Println(out)
 
-	cmd = node_cmd_prefix + " tc qdisc show dev " + dev
+	cmd = node_cmd_prefix + " tc filter show dev " + dev
 	out = exe_cmd_full(cmd)
-	log.Println("qdisc show is" + out)
+	log.Println(out)
 }
 
 
@@ -150,7 +152,7 @@ func show(num int){
 
 		for _, line := range strings.Split(exe_cmd_full(cmd), "\n") {
 			if line == ""{
-				log.Println("veth is nil")		
+				log.Println("veth is nil")
 				continue
 			}
 			veth_name := strings.Split(line, " ")[0]
@@ -219,6 +221,7 @@ func del(num int){
 
 func exe_cmd_full(cmd string) string {
 	log.Println("command is : ", cmd)
+	//out, _ := exec.Command("sh", "-c", cmd).Output()
 	out, err := exec.Command("sh", "-c", cmd).Output()
 	if err != nil {
 		log.Println("Error to exec CMD", cmd)

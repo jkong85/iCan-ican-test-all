@@ -1,0 +1,30 @@
+*.  kubectl get nodes 
+NAME            STATUS    AGE
+192.168.56.11   Ready     37m
+192.168.56.12   Ready     37m
+192.168.56.13   Ready     37m
+
+*.  kubectl get pods -o wide
+NAME          READY     STATUS    RESTARTS   AGE       IP           NODE
+alpine        1/1       Running   0          37m       10.168.0.5   192.168.56.13
+nginx-b04vj   1/1       Running   0          37m       10.168.0.6   192.168.56.11
+nginx-h3jhq   1/1       Running   0          37m       10.168.0.3   192.168.56.13
+
+*. ssh ican-2 docker ps -a
+CONTAINER ID        IMAGE                                      COMMAND                  CREATED             STATUS              PORTS               NAMES
+e2ade80da930        nginx:1.7.9                                "nginx -g 'daemon ..."   33 minutes ago      Up 33 minutes                           k8s_nginx.....
+
+*. ssh ican-2 ifconfig | grep veth
+veth1_89df512 Link encap:Ethernet  HWaddr 7a:53:f4:a7:2f:9d  
+veth1_e3384f6 Link encap:Ethernet  HWaddr d2:25:9a:b2:a7:a7  
+
+*. ssh ican-2 ifconfig veth1_....
+
+*. ssh ican-2 docker inspect -f '{{.State.Pid}}' e2ade80da930
+4217
+
+*. ssh ican-2 sudo nsenter -t 4217 -n ifconfig
+	or config/check the TC cmd 
+
+
+For each node, config the enp9s0, br, veth, and all the container interface

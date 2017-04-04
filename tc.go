@@ -10,10 +10,16 @@ import (
 
 func main() {
 	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
-	arg := os.Args[1]
-	num, _ := strconv.Atoi(arg) 
-	//del(num)
-	//config(num)
+	arg1 := os.Args[1]
+	arg2 := os.Args[2]
+	num, _ := strconv.Atoi(arg1)
+	if arg2 == "a" {
+		config(num)
+	} else if  arg2 == "d" {
+		del(num)
+	} else {
+		log.Println("Please specify the action: a or d ?")	
+	}
 	show(num)
 }
 

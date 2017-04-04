@@ -2,16 +2,19 @@ package main
 
 import (
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 	"strconv"
 )
 
 func main() {
-	del(50)
-	config(50)
+	//del(50)
+	//config(50)
 	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
-	show(50)
+	arg := os.Args[1]
+	num, _ := strconv.Atoi(arg) 
+	show(num)
 }
 
 func config(num int){

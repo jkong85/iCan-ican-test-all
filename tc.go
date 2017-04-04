@@ -8,24 +8,27 @@ import (
 	"strconv"
 )
 
+var start int
+var num int
 func main() {
 	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
-	arg1 := os.Args[1]
-	arg2 := os.Args[2]
-	num, _ := strconv.Atoi(arg1)
-	if arg2 == "a" {
+	start, _ = strconv.Atoi(os.Args[1])
+	num,_ := strconv.Atoi(os.Args[2])
+	action := os.Args[3]
+	if action == "a" {
 		config(num)
-	} else if  arg2 == "d" {
+	} else if  action == "d" {
 		del(num)
-	} else {
+	} else if action == "s" {
+		show(num)
+	} else{
 		log.Println("Please specify the action: a or d ?")	
 	}
-	show(num)
 }
 
 func config(num int){
 	log.Println("Start to config the TC policy on All Nodes!")
-	for i := 0; i<num; i++{
+	for i := start; i<start+num; i++{
 		node_name := "ican-" + strconv.Itoa(i)
 		log.Println("Config the node: " + node_name)
 		// for each node, we config the VM's interface, Br interface and all the container internace and Veth		
@@ -125,7 +128,7 @@ func showEth(node_cmd_prefix string, dev string){
 
 
 func show(num int){
-	for i := 0; i<num; i++{
+	for i := start; i<start+num; i++{
 		node_name := "ican-" + strconv.Itoa(i)
 		//log.Println("========================")
 		log.Println("Show the config of the node: " + node_name)
@@ -174,7 +177,7 @@ func show(num int){
 
 
 func del(num int){
-	for i := 0; i<num; i++{
+	for i := start; i<start+num; i++{
 		node_name := "ican-" + strconv.Itoa(i)
 		log.Println("========================")
 		log.Println("delete the configuration of the node: " + node_name)

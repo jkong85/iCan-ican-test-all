@@ -9,11 +9,11 @@ import (
 )
 
 func main() {
-	//del(50)
-	//config(50)
 	log.Println("<<<<<<<<<<<<<<<<<<<<<========================>>>>>>>>>>>>>>>>")
 	arg := os.Args[1]
 	num, _ := strconv.Atoi(arg) 
+	//del(num)
+	//config(num)
 	show(num)
 }
 

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+max=50
+for (( i=0; i < $max; ++i ))
+do
+    	echo "Move the $i node json file"
+	ssh ican-$i sudo mv /opt/scheduler-policy.json /opt/scheduler-policy.json.bak
+done
